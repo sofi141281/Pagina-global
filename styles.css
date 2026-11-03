@@ -1,0 +1,791 @@
+/* 1. Shared colors and basic page settings. */
+:root {
+  --background: #f5f5ef;
+  --ink: #21362c;
+  --muted: #6c776f;
+  --green: #234f3c;
+  --lime: #d8ed97;
+  --line: #e0e5dc;
+  --error: #a43f34;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 20px;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--ink);
+  font: 14px/1.6 "Segoe UI", Arial, sans-serif;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: white;
+}
+
+button {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #edf3e5;
+  border-color: #9aac94;
+}
+
+button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+button[aria-pressed="true"] {
+  background: var(--green);
+  color: white;
+}
+
+:focus-visible {
+  outline: 3px solid #7b9e32;
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: -70px;
+  z-index: 10;
+  padding: 10px;
+  background: var(--lime);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* 2. Sidebar, navigation, and main page layout. */
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 225px;
+  padding: 32px 24px;
+  background: #172922;
+  color: #e7eee8;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  text-decoration: none;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.brand span {
+  color: var(--lime);
+}
+
+.course {
+  margin: 45px 0 24px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  line-height: 2;
+  color: #a8bfaf;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+nav a {
+  padding: 12px 0;
+  text-decoration: none;
+  font-size: 12px;
+  border-bottom: 1px solid #304439;
+}
+
+nav a:hover {
+  color: var(--lime);
+}
+
+.sidebar-note {
+  margin-top: auto;
+  color: #a8bfaf;
+  font-size: 12px;
+}
+
+main {
+  margin-left: 225px;
+  padding: 0 40px;
+  max-width: 1700px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+.topbar button {
+  font-size: 11px;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 40px 0;
+}
+
+.eyebrow {
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-size: clamp(34px, 4vw, 59px);
+  line-height: 1.12;
+  letter-spacing: -2px;
+  margin: 15px 0;
+}
+
+h1 span {
+  color: #758b51;
+}
+
+.hero > div > p:last-child {
+  max-width: 460px;
+  color: var(--muted);
+}
+
+.hero-card {
+  flex: 0 0 195px;
+  background: var(--lime);
+  padding: 25px;
+  border-radius: 60px 8px 8px 8px;
+  transform: rotate(-2deg);
+}
+
+.hero-card strong {
+  font-size: 72px;
+  line-height: 1;
+}
+
+.hero .hero-card p {
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.examples {
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+}
+
+.examples h2 {
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 3. Panels and editable tables. */
+.panel {
+  margin-bottom: 24px;
+  padding: 25px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+}
+
+h3 {
+  font-size: 14px;
+}
+
+.section-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.step {
+  display: inline-grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #edf2e5;
+  color: var(--green);
+  font-size: 10px;
+}
+
+.badge {
+  background: #f3f5ef;
+  color: #718067;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.toolbar {
+  margin: 20px 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.toolbar input {
+  width: 150px;
+}
+
+.table-wrap {
+  overflow: auto;
+  max-width: 100%;
+  margin: 15px 0;
+  border-radius: 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  padding: 11px 12px;
+  text-align: right;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+thead {
+  background: #f3f5ef;
+}
+
+th {
+  font-weight: 600;
+}
+
+#payoff-table th,
+#payoff-table td {
+  min-width: 150px;
+}
+
+#payoff-table input {
+  width: 100%;
+  min-width: 75px;
+  text-align: right;
+}
+
+#payoff-table .name-input {
+  text-align: left;
+  font-weight: 600;
+}
+
+.cell-heading {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.remove-button {
+  border: 0;
+  background: transparent;
+  padding: 3px 6px;
+  color: #8a7b73;
+}
+
+.probability-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 9px;
+  font-size: 10px;
+}
+
+.probability-field input {
+  max-width: 90px;
+}
+
+.status {
+  padding: 10px 13px;
+  border-radius: 6px;
+  background: #f0f5e8;
+  color: #47613b;
+  font-size: 12px;
+}
+
+.status.error {
+  background: #fff0e9;
+  color: var(--error);
+}
+
+[aria-invalid="true"] {
+  border: 2px solid var(--error);
+  background: #fff5f0;
+}
+
+details {
+  border-top: 1px solid var(--line);
+  margin-top: 17px;
+  padding-top: 14px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+summary {
+  cursor: pointer;
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* 4. Criterion cards and highlighted winners. */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.card {
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #f0f5e8;
+  min-width: 0;
+}
+
+.card:nth-child(2) {
+  background: #f5f3eb;
+}
+
+.card:nth-child(3) {
+  background: #edf2f2;
+}
+
+.card:nth-child(4) {
+  background: #f4f0f6;
+}
+
+.card h3 {
+  margin: 0 0 5px;
+}
+
+.card p {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.recommendation {
+  font-size: 18px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  margin: 16px 0 5px;
+}
+
+.score {
+  font-size: 12px;
+  color: var(--green);
+}
+
+.tie {
+  display: inline-block;
+  padding: 2px 6px;
+  margin-top: 8px;
+  border-radius: 4px;
+  background: #ffffffaa;
+  font-size: 10px;
+}
+
+.best {
+  background: #edf5df;
+  font-weight: 700;
+  color: var(--green);
+}
+
+#summary-unit {
+  margin-left: 10px;
+  font-weight: 400;
+}
+
+/* 5. Filtering controls and flow diagram. */
+.stage-controls {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.stage-controls li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7f8f3;
+}
+
+.stage-controls label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.stage-controls input {
+  width: 65px;
+}
+
+.stage-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.stage-actions button {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.flow-diagram {
+  display: flex;
+  gap: 28px;
+  overflow: auto;
+  padding: 15px 4px 25px;
+}
+
+.flow-node {
+  position: relative;
+  flex: 0 0 190px;
+}
+
+.flow-node + .flow-node::before {
+  content: "→";
+  position: absolute;
+  left: -24px;
+  top: 65px;
+  color: #829969;
+  font-size: 22px;
+}
+
+.flow-label {
+  min-height: 40px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.survivors {
+  min-height: 110px;
+  padding: 15px;
+  border: 1px solid #bdcda8;
+  border-radius: 8px;
+  background: #f5f8ee;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.survivors strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 10px;
+}
+
+.flow-node.final .survivors {
+  background: var(--green);
+  color: white;
+}
+
+.eliminated {
+  margin-left: 17px;
+  padding: 13px 0 0 12px;
+  border-left: 1px dashed #c38b77;
+  color: var(--error);
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+.eliminated strong {
+  display: block;
+}
+
+.outcome {
+  padding: 17px 20px;
+  border-radius: 8px;
+  background: #eaf2da;
+}
+
+.outcome small {
+  display: block;
+  color: #607b44;
+  letter-spacing: 1px;
+}
+
+.outcome strong {
+  font-size: 19px;
+}
+
+.outcome p {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px 0 30px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+footer p {
+  margin: 5px 0;
+}
+
+.conversation-record {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 6. Responsive layouts for tablets and phones. */
+@media (max-width: 1150px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  main {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 760px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    padding: 16px 20px;
+  }
+
+  .course,
+  .sidebar-note {
+    display: none;
+  }
+
+  nav {
+    flex-direction: row;
+    overflow: auto;
+    gap: 15px;
+    margin-top: 12px;
+  }
+
+  nav a {
+    white-space: nowrap;
+    font-size: 10px;
+    border: 0;
+    padding: 4px 0;
+  }
+
+  main {
+    margin: 0;
+    padding: 0 16px;
+  }
+
+  .hero {
+    padding: 28px 0;
+  }
+
+  h1 {
+    font-size: 37px;
+  }
+
+  .hero-card {
+    display: none;
+  }
+
+  .panel {
+    padding: 17px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+
+  .badge {
+    display: none;
+  }
+
+  .card {
+    padding: 13px;
+  }
+
+  .recommendation {
+    font-size: 16px;
+  }
+
+  .stage-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  footer {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 360px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* 7. Print-friendly layout. */
+@media print {
+  @page {
+    size: landscape;
+    margin: 10mm;
+  }
+
+  body {
+    background: white;
+  }
+
+  .sidebar,
+  .topbar,
+  .examples,
+  button,
+  .toolbar,
+  .stage-controls,
+  .badge {
+    display: none !important;
+  }
+
+  main {
+    margin: 0;
+    padding: 0;
+  }
+
+  .hero {
+    padding: 0 0 15px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .panel {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .card,
+  .outcome {
+    break-inside: avoid;
+  }
+
+  .table-wrap {
+    overflow: visible;
+  }
+
+  th,
+  td {
+    padding: 5px;
+  }
+
+  input {
+    border: 0;
+    padding: 2px;
+    background: transparent;
+  }
+
+  .flow-diagram {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  .flow-node + .flow-node::before {
+    display: none;
+  }
+}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="An interactive dashboard for decisions under uncertainty."
+  >
+
+  <title>Decision Lab | Grade 10</title>
+
+  <!-- Keep these three files in the same folder. -->
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <aside class="sidebar">
+    <a class="brand" href="#main">
+      ↗ Decision<span>Lab</span>
+    </a>
+
+    <p class="course">
+      GLOBAL ECONOMICS<br>
+      GRADE 10 · TERM 1 · C10
+    </p>
+
+    <nav aria-label="Dashboard sections">
+      <a href="#model">01 · Decision model</a>
+      <a href="#results">02 · Criteria and results</a>
+      <a href="#filters">03 · Staged filtering</a>
+      <a href="#flow">04 · Decision flow</a>
+    </nav>
+
+    <p class="sidebar-note">
+      Compare possibilities.<br>
+      Find your next step.
+    </p>
+  </aside>
+
+  <main id="main">
+    <div class="topbar">
+      <span>LEARNING BY DOING / TERM 1</span>
+
+      <button id="print-button" type="button">
+        Print / PDF ↗
+      </button>
+    </div>
+
+    <header class="hero">
+      <div>
+        <p class="eyebrow">DECISIONS UNDER UNCERTAINTY</p>
+
+        <h1>
+          Every decision.<br>
+          <span>A clearer perspective.</span>
+        </h1>
+
+        <p>
+          Edit a scenario, compare four criteria, and explore
+          how your best option changes.
+        </p>
+      </div>
+
+      <div class="hero-card">
+        <strong>4</strong>
+
+        <p>
+          ways to choose.<br>
+          One informed decision.
+        </p>
+      </div>
+    </header>
+
+    <section class="examples" aria-labelledby="examples-title">
+      <h2 id="examples-title">Choose your starting point</h2>
+
+      <div
+        class="button-row"
+        role="group"
+        aria-label="Load an example"
+      >
+        <button type="button" data-example="coffee">
+          Coffee shop
+        </button>
+
+        <button type="button" data-example="energy">
+          Energy investment
+        </button>
+
+        <button type="button" data-example="logistics">
+          Logistics
+        </button>
+
+        <button type="button" data-example="blank">
+          ＋ Start from scratch
+        </button>
+      </div>
+
+      <p id="scenario-description" class="muted"></p>
+    </section>
+
+    <section id="model" class="panel">
+      <div class="section-heading">
+        <h2>
+          <span class="step">01</span>
+          Your decision model
+        </h2>
+
+        <span class="badge">LIVE EDITING</span>
+      </div>
+
+      <p class="muted">
+        Enter net benefits: higher payoffs are better.
+        Use probabilities between 0 and 1.
+      </p>
+
+      <div class="toolbar">
+        <label>
+          Payoff unit
+          <input id="unit" type="text" maxlength="50">
+        </label>
+
+        <div class="button-row">
+          <button id="add-alternative" type="button">
+            ＋ Alternative
+          </button>
+
+          <button id="add-state" type="button">
+            ＋ State
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="table-wrap"
+        tabindex="0"
+        role="region"
+        aria-label="Editable payoff table"
+      >
+        <table id="payoff-table"></table>
+      </div>
+
+      <p
+        id="validation"
+        class="status"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+      <details>
+        <summary>How do I read this table?</summary>
+
+        <p>
+          Rows are alternatives you can choose. Columns are states
+          of nature you cannot control. Each payoff is the net benefit
+          of that combination. Negative values represent losses.
+          Probabilities must add up to 1 for EMV.
+        </p>
+      </details>
+    </section>
+
+    <section id="results" class="panel">
+      <div class="section-heading">
+        <h2>
+          <span class="step">02</span>
+          Four criteria, different perspectives
+        </h2>
+
+        <span class="badge">AUTO UPDATE</span>
+      </div>
+
+      <p class="muted">
+        Each criterion compares the complete original set of
+        alternatives. Ties are retained.
+      </p>
+
+      <div id="criterion-cards" class="cards"></div>
+
+      <h3>
+        Comparison summary
+        <span id="summary-unit" class="muted"></span>
+      </h3>
+
+      <div
+        id="summary-table"
+        class="table-wrap"
+        tabindex="0"
+        role="region"
+        aria-label="Comparison of all alternatives"
+      ></div>
+
+      <details>
+        <summary>Regret table and formulas</summary>
+
+        <p>
+          Regret = best payoff in a state − the alternative's payoff.
+          Maximax chooses the highest maximum.
+          Maximin chooses the highest minimum.
+          Minimax Regret chooses the lowest maximum regret.
+          EMV = sum of (payoff × state probability).
+        </p>
+
+        <div
+          id="regret-table"
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Regret matrix"
+        ></div>
+
+        <p class="muted">
+          Displayed values use two decimals; calculations keep full
+          precision. Values within an absolute tolerance of 10⁻⁹
+          of the best value or cutoff are treated as tied.
+        </p>
+      </details>
+    </section>
+
+    <section id="filters" class="panel">
+      <div class="section-heading">
+        <h2>
+          <span class="step">03</span>
+          Filter, step by step
+        </h2>
+
+        <button id="add-stage" type="button">
+          ＋ Add stage
+        </button>
+      </div>
+
+      <p class="muted">
+        Each stage uses only the previous survivors.
+        Eliminated alternatives never return.
+        Statistics and regret benchmarks remain fixed to the
+        original payoff table. All ties at the cutoff survive.
+      </p>
+
+      <ol id="stage-controls" class="stage-controls"></ol>
+
+      <p
+        id="filter-message"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+      <div
+        id="filter-table"
+        class="table-wrap"
+        tabindex="0"
+        role="region"
+        aria-label="Results of each filtering stage"
+      ></div>
+    </section>
+
+    <section id="flow" class="panel">
+      <div class="section-heading">
+        <h2>
+          <span class="step">04</span>
+          Your decision journey
+        </h2>
+
+        <span class="badge">FILTERING MAP</span>
+      </div>
+
+      <p class="muted">
+        Arrows connect survivors. Dashed branches show eliminations.
+        The filtering table above provides the same information in text.
+      </p>
+
+      <div
+        id="flow-diagram"
+        class="flow-diagram"
+        tabindex="0"
+        role="region"
+        aria-label="Staged filtering flow diagram"
+      ></div>
+
+      <div
+        id="final-result"
+        role="status"
+        aria-live="polite"
+      ></div>
+    </section>
+
+    <footer>
+      <div>
+        <strong>Decision Lab ↗</strong>
+        <p>Grade 10 · Term 1 · Practice Activity C10</p>
+      </div>
+
+      <div class="conversation-record">
+        <strong>AI development record</strong>
+
+        <!--
+          PASTE YOUR SHARED CONVERSATION URL
+          BETWEEN THE EMPTY QUOTES IN href BELOW.
+        -->
+        <a
+          id="conversation-link"
+          href=""
+          target="_blank"
+          rel="noopener noreferrer"
+          hidden
+        >
+          View the AI development conversation ↗
+        </a>
+
+        <span id="conversation-placeholder">
+          https://chatgpt.com/s/cx_6ae9232e6bbc81919434e48b5676158e
+        </span>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>
